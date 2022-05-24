@@ -13,6 +13,10 @@ def about(request):
     return render(request, 'main/about.html')
 
 
+def admin(request):
+    return redirect('admin')
+
+
 def create(request):
     error = ''
     if request.method == 'POST':

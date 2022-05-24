@@ -11,6 +11,8 @@
             <div class = "alert alert-warning mt-2">
                 <h3>{{ elem.title }}</h3>
                 <p>{{ elem.task}}</p>
+                <li class="d-flex align-items-start mb-1"><a href="{% url 'about'%}">Отзывы</a></li>
+                <li class="d-flex align-items-start mb-1"><a href="{% url 'about'%}">Узнать адрес</a></li>
             </div>
         {% endfor %}
     {% else %}

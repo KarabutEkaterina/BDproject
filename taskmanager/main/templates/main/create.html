@@ -1,11 +1,11 @@
 {% extends 'main/base.html'%}
 
 {% block title%}
-Создать задание
+Добавить ресторан
 {% endblock %}
 
 {% block content%}
-    <h1>Создать задание</h1>
+    <h1>Добавить ресторан</h1>
     <form method="post">
         {% csrf_token %}
         {{form.title}}<br>
