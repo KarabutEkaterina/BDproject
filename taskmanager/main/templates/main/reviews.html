@@ -1,0 +1,18 @@
+{% extends 'main/base.html'%}
+
+{% block title%}
+{{ title }}
+{% endblock %}
+
+{% block content%}
+<h1>Отзывы о данном ресторане</h1>
+    {% if review %}
+        {% for elem in review %}
+            <div class = "alert alert-warning mt-2">
+                <p>{{ elem.description}}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>У нас нет записей</p>
+    {% endif %}
+{% endblock %}

@@ -15,4 +15,4 @@ class TaskForm(ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Введите описание'
             })
-      }
+        }

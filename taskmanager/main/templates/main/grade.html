@@ -5,14 +5,11 @@
 {% endblock %}
 
 {% block content%}
-<h1>Главная страница</h1>
+<h1>Средняя оценка посетителей</h1>
     {% if tasks %}
         {% for elem in tasks %}
             <div class = "alert alert-warning mt-2">
                 <h3>{{ elem.title }}</h3>
-                <p>{{ elem.task}}</p>
-                <li class="d-flex align-items-start mb-1"><a href="{% url 'reviews' elem.pk %}">Отзывы</a></li>
-                <li class="d-flex align-items-start mb-1"><a href="{% url 'address' elem.pk %}">Узнать адрес</a></li>
             </div>
         {% endfor %}
     {% else %}
