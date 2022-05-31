@@ -1,5 +1,6 @@
 from .models import Task
 from django.forms import ModelForm, TextInput, Textarea
+from django import forms
 
 
 class TaskForm(ModelForm):
@@ -16,3 +17,8 @@ class TaskForm(ModelForm):
                 'placeholder': 'Введите описание'
             })
         }
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)

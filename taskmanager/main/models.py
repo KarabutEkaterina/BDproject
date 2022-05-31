@@ -1,8 +1,28 @@
 from django.db import models
 from datetime import datetime
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
 
 
-# Create your models here.
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    description = models.CharField(max_length=100, default='')
+    city = models.CharField(max_length=100, default='')
+    phone = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = 'Профиль пользователя'
+        verbose_name_plural = 'Профили пользователей'
+
+
+def create_profile(sender, **kwargs):
+    if kwargs['created']:
+        user_profile = UserProfile.objects.create(user=kwargs['instance'])
+
+
+post_save.connect(create_profile, sender=User)
+
 
 class Task(models.Model):
     title = models.CharField('Название', max_length=50)
@@ -58,7 +78,8 @@ class Cuisine(models.Model):
 
 
 class Grade(models.Model):
-    val = models.IntegerField('Оценка пользователя')
+    val = models.IntegerField('Оценка пользователя', validators=[MinValueValidator(0),
+                                                                 MaxValueValidator(5)])
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
 
     def __int__(self):
@@ -67,3 +88,50 @@ class Grade(models.Model):
     class Meta:
         verbose_name = 'Оценка'
         verbose_name_plural = 'Оценки'
+
+
+class Services(models.Model):
+    description = models.TextField('Описание')
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.description
+
+    class Meta:
+        db_table = 'services'
+        verbose_name = 'Услуга'
+        verbose_name_plural = 'Услуги'
+
+
+class Event(models.Model):
+    name = models.CharField('Название мероприятия', max_length=120)
+    event_date = models.DateTimeField('Дата проведения мероприятия')
+    venue = models.CharField('Место проведения', max_length=120)
+    description = models.TextField('Описание')
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'event'
+        verbose_name = 'Мероприятие'
+        verbose_name_plural = 'Мероприятия'
+
+
+class Menu(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    data = models.JSONField
+
+    class Meta:
+        verbose_name = 'Меню'
+        verbose_name_plural = 'Меню'
+
+
+class Ingredients(models.Model):
+    cuisine = models.ManyToManyField(Cuisine)
+    ingredient = models.CharField(max_length=100)
+    description = models.TextField('Описание')
+
+    def __str__(self):
+        return self.ingredient

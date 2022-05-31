@@ -7,9 +7,11 @@
 {% block content%}
 <h1>Адрес заведения</h1>
     {% if place %}
-            <div class = "alert alert-warning mt-2">
-                <p>{{ place.address }}</p>
-            </div>
+     <div class="bg-light p-5 rounded">
+         <p>{{ place.address}}</p>
+
+     </div>
+
     {% else %}
         <p>У нас нет записей</p>
     {% endif %}

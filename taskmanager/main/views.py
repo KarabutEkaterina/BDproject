@@ -1,8 +1,11 @@
-from django.shortcuts import render, redirect
-from .models import Task, Place, Reviews, Grade
-from .forms import TaskForm
+from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
-from django.db.models import Avg
+from django.shortcuts import render, redirect
+from .models import Task, Place, Reviews, Grade, Services
+from .forms import TaskForm, LoginForm
+from django.db.models import Avg, F
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 
 
 def index(request):
@@ -51,12 +54,46 @@ def reviews(request, item_id):
     return render(request, 'main/reviews.html', {'title': 'Отзывы о данном ресторане', 'review': review})
 
 
-def login(request):
-    return
+def login_page(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            user = authenticate(username=cd['username'], password=cd['password'])
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return redirect('home')
+                else:
+                    return HttpResponse('Disabled account')
+            else:
+                return HttpResponse('Invalid login')
+    else:
+        form = LoginForm()
+
+    context = {'form': form,
+               'title': 'Вход в систему'
+               }
+
+    return render(request, 'main/login.html', context)
 
 
 def register(request):
-    return
+    form = UserCreationForm()
+
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            user = form.cleaned_data.get('username')
+            messages.success(request, 'Аккаунт был создан для пользователя' + user)
+            return redirect('login')
+
+    context = {'form': form,
+               'title': 'Регистрация пользователя'
+               }
+
+    return render(request, 'main/register.html', context)
 
 
 def grade(request):
@@ -65,6 +102,8 @@ def grade(request):
     average_grade = Grade.objects.values('task').annotate(average=Avg('val')).filter(average__gt=4.3)
     tasks = Task.objects.filter(id__in=average_grade.values('task'))
 
+    # print(connection.queries)
+
     context = {
         'title': 'Средние оценки заведений',
         'tasks': tasks,
@@ -72,3 +111,26 @@ def grade(request):
     }
 
     return render(request, 'main/grade.html', context)
+
+
+def services(request):
+    serv = Services.objects.all().select_related('task')
+
+    context = {
+        'title': 'Дополнительные услуги',
+        'services': serv,
+    }
+
+    return render(request, 'main/services.html', context)
+
+
+def event(request):
+    task = Task.objects.values('title').annotate(event_name=F('event__name'), date=F('event__event_date'),
+                                                 description=F('event__description'))
+
+    context = {
+        'title': 'Ближайшие меропрятия',
+        'tasks': task,
+    }
+
+    return render(request, 'main/event.html', context)

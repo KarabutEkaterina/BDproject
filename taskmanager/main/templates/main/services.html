@@ -1,0 +1,20 @@
+{% extends 'main/base.html'%}
+
+{% block title%}
+{{ title }}
+{% endblock %}
+
+{% block content%}
+<h1>Дополнительные услуги</h1>
+    {% if services %}
+        {% for elem in services %}
+
+                 <div class="bg-light p-5 rounded">
+                     <p>{{ elem.task.title}}</p>
+                     <p>{{ elem.description}}</p>
+                 </div>
+        {% endfor %}
+    {% else %}
+        <p>У нас нет записей</p>
+    {% endif %}
+{% endblock %}

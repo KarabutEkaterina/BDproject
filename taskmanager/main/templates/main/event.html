@@ -1,0 +1,22 @@
+{% extends 'main/base.html'%}
+
+{% block title%}
+{{ title }}
+{% endblock %}
+
+{% block content%}
+<h1>Ближайшие мероприятия</h1>
+    {% if tasks %}
+        {% for elem in tasks %}
+         <div class="bg-light p-5 rounded">
+                     <h3>{{ elem.title}}</h3>
+                     <p>{{ elem.event_name }}</p>
+                     <p>{{ elem.date }}</p>
+                     <p>{{ elem.description }}</p>
+                 </div>
+
+        {% endfor %}
+    {% else %}
+        <p>У нас нет записей</p>
+    {% endif %}
+{% endblock %}

@@ -8,12 +8,12 @@
 <h1>Главная страница</h1>
     {% if tasks %}
         {% for elem in tasks %}
-            <div class = "alert alert-warning mt-2">
-                <h3>{{ elem.title }}</h3>
-                <p>{{ elem.task}}</p>
-                <li class="d-flex align-items-start mb-1"><a href="{% url 'reviews' elem.pk %}">Отзывы</a></li>
-                <li class="d-flex align-items-start mb-1"><a href="{% url 'address' elem.pk %}">Узнать адрес</a></li>
-            </div>
+<div class="bg-light p-5 rounded">
+    <h1>{{ elem.title }}</h1>
+    <p class="lead">{{ elem.task}}</p>
+    <a class="btn btn-lg btn-primary" href="{% url 'reviews' elem.pk %}" role="button">Отзывы »</a>
+    <a class="btn btn-lg btn-primary" href="{% url 'address' elem.pk %}" role="button">Узнать адреc »</a>
+  </div>
         {% endfor %}
     {% else %}
         <p>У нас нет записей</p>
